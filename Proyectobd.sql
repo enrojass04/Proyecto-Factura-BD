@@ -70,8 +70,8 @@ insert into producto values
 ('Electronico','e003','Audifonos',36700,1),
 ('Electronico','e004','Plancha',65500,1);
 
-DROP TABLE IF EXISTS `Pago`;
-CREATE TABLE Pago
+DROP TABLE IF EXISTS `TipoPago`;
+CREATE TABLE TipoPago
 (
   idPago VARCHAR(15),
   tipoPago VARCHAR(15),
