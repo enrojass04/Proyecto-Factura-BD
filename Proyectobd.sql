@@ -71,10 +71,10 @@ insert into producto values
 ('Electronico','e004','Plancha',65500,1);
 
 DROP TABLE IF EXISTS `TipoPago`;
-CREATE TABLE TipoPago
+CREATE TABLE Pago
 (
   idPago VARCHAR(15),
-  tipoPago VARCHAR(15),
+  TipoPago VARCHAR(15),
   numero INT,
   PRIMARY KEY (idPago),
   FOREIGN KEY (numero) REFERENCES Factura(numero)
@@ -106,7 +106,7 @@ from consumidor c;
 
 create view vistapago as
 select p.idPago, p.tipoPago
-from pago p;
+from Pago p;
 
 create view vistaproducto as
 select b.tipoproducto, b.codigo,
@@ -165,6 +165,7 @@ END //
 DELIMITER ;
 
 CALL CALCULARIVA();
+
 
 /*
 select * from vistaconsumidor;
