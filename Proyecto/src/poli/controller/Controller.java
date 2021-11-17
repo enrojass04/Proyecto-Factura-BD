@@ -1,6 +1,13 @@
 package poli.controller;
 
+import java.io.IOException;
 import java.net.URL;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -210,21 +217,21 @@ public class Controller implements Initializable{
 	//////// Selecccion de datos Consumidor ///////
 	@FXML
 	void getSelected1(MouseEvent event) {
-		index = tablaConsumidor.getSelectionModel().getSelectedIndex();
-		if (index <= -1) {
-
-			return;
+		Consumidor c = this.tablaConsumidor.getSelectionModel().getSelectedItem();
+		if (c != null) {
+			nombreUsuario.setText(c.getNombreUsuario());
+			numeroTarjetaUsuario.setText(c.getNumeroTarjetaUsuario());
+			puntosUsuario.setText(c.getPuntosUsuario());
+			idUsuario.setText(c.getIdUsuario()+"");
+			direccionUsuario.setText(c.getDireccionUsuario());
+			numeroUsuario.setText(c.getNumeroUsuario());			
 		}
-		nombreUsuario.setText(colNombre.getCellData(index).toString());
-		numeroTarjetaUsuario.setText(colNumeroTarjeta.getCellData(index).toString());
-		puntosUsuario.setText(colPuntos.getCellData(index).toString());
-		idUsuario.setText(colId.getCellData(index).toString());
-		direccionUsuario.setText(colDireccion.getCellData(index).toString());
-		numeroUsuario.setText(colTelefono.getCellData(index).toString());
+		
 	}
 	
 	////////Actualizar de datos Tabla Consumidor /////// 	
  	public void actualizarTablaConsumidor(){
+ 		
         colNombre.setCellValueFactory(new PropertyValueFactory<Consumidor,String>("nombreUsuario"));
         colNumeroTarjeta.setCellValueFactory(new PropertyValueFactory<Consumidor,String>("numeroTarjetaUsuario"));
         colPuntos.setCellValueFactory(new PropertyValueFactory<Consumidor,String>("puntosUsuario"));
@@ -234,21 +241,22 @@ public class Controller implements Initializable{
         
         listaConsumidor = Conexion.getDataConsumidor();
         tablaConsumidor.setItems(listaConsumidor);
+        
     }
  	
  	////////Selecccion de datos Cajero ///////
  	@FXML
 	void getSelected2(MouseEvent event) {
- 		index = tablaCajero.getSelectionModel().getSelectedIndex();
-		if (index <= -1) {
-
-			return;
+ 		
+ 		Cajero ca = this.tablaCajero.getSelectionModel().getSelectedItem();
+ 		if (ca != null) {			
+ 			idCajero.setText(ca.getIdCajero());
+ 			nombreCajero.setText(ca.getNombreCajero());			
 		}
-		idCajero.setText(colCajero1.getCellData(index).toString());
-		nombreCajero.setText(colCajero2.getCellData(index).toString());
+ 		
  	}
  	
-	////////Actualizar de datos Tabla Consumidor /////// 	
+	////////Actualizar de datos Tabla Cajero /////// 	
  	public void actualizarTablaCajero(){
  		colCajero1.setCellValueFactory(new PropertyValueFactory<Cajero,String>("idCajero"));
  		colCajero2.setCellValueFactory(new PropertyValueFactory<Cajero,String>("nombreCajero"));
@@ -260,17 +268,17 @@ public class Controller implements Initializable{
 	////////Selecccion de datos Almacen ///////
 	@FXML
 	void getSelected3(MouseEvent event) {
-		index = tablaAlmacen.getSelectionModel().getSelectedIndex();
-		if (index <= -1) {
-
-			return;
+		
+		Almacen a = this.tablaAlmacen.getSelectionModel().getSelectedItem();
+		if (a != null) {			
+			nit.setText(a.getNit());
+			nombreAlmacen.setText(a.getNombreAlmacen());
+			sucursal.setText(a.getSucursal());
+			direccionAlmacen.setText(a.getDireccionAlmacen());
+			nombreGerente.setText(a.getNombreGerente());
+			telefonoAlmacen.setText(a.getNombreAlmacen());			
 		}
-		nit.setText(colNit.getCellData(index).toString());
-		nombreAlmacen.setText(colNombreAlmacen.getCellData(index).toString());
-		sucursal.setText(colSucursal.getCellData(index).toString());
-		direccionAlmacen.setText(coldireccionAlmacen.getCellData(index).toString());
-		nombreGerente.setText(colNombreGerente.getCellData(index).toString());
-		telefonoAlmacen.setText(colTelefonoAlmacen.getCellData(index).toString());
+		
 	}
  	
 	////////Actualizar de datos Tabla Almacen /////// 	
@@ -290,13 +298,12 @@ public class Controller implements Initializable{
 	@FXML
 	void getSelected4(MouseEvent event) {
 		
-		index = tablaPago.getSelectionModel().getSelectedIndex();
-		if (index <= -1) {
-
-			return;
+		Pago p = this.tablaPago.getSelectionModel().getSelectedItem();
+		if (p != null) {
+			idPago.setText(p.getIdPago());
+			tipoPago.setText(p.getTipoPago());
 		}
-		idPago.setText(colIdPago.getCellData(index).toString());
-		tipoPago.setText(colTipoPago.getCellData(index).toString());
+		
 	}
 	
 	////////Actualizar de datos Tabla Pago /////// 	
@@ -311,15 +318,14 @@ public class Controller implements Initializable{
 	//////// Selecccion de datos Productos ///////
 	@FXML
 	void getSelected5(MouseEvent event) {
-		index = tablaProducto.getSelectionModel().getSelectedIndex();
-		if (index <= -1) {
-
-			return;
+		Producto pr = this.tablaProducto.getSelectionModel().getSelectedItem();
+		if (pr != null) {
+			tipoProducto.setText(pr.getTipoProducto());
+			codigo.setText(pr.getCodigo());
+			nombreProducto.setText(pr.getNombreProducto());
+			precio.setText(pr.getPrecio()+"");
 		}
-		tipoProducto.setText(colTipoProducto.getCellData(index).toString());
-		codigo.setText(colCodigo.getCellData(index).toString());
-		nombreProducto.setText(colNombreProducto.getCellData(index).toString());
-		precio.setText(colPrecio.getCellData(index).toString());
+		
 	}
 	
 	////////Actualizar de datos Tabla Producto /////// 	
@@ -581,19 +587,30 @@ public class Controller implements Initializable{
 		}
 	
     @FXML
-    void agregarProductoEnFactura(ActionEvent event) {
-    	conn = Conexion.ConnectarDb();
-    	try {
-            String sql = "select p.nombre form vistaproducto p where p.codigo = ?";
-            pst= conn.prepareStatement(sql);
-            pst.execute();
-            mensajeUpdate();
-			actualizarTablaPF();
+    void agregarProductoEnFactura(ActionEvent event) {    
+    		
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/poli/view/ProductosEnFactura.fxml"));
+	    		
+	    		Parent root = loader.load();
+	    		
+	    		AgregarPFController controlador = loader.getController();
+	    		controlador.atributos(listaProducto);
+	    		
+	    		Scene scene = new Scene(root);
+	    		Stage stage = new Stage();
+	    		stage.initModality(Modality.APPLICATION_MODAL);
+	    		stage.setScene(scene);
+	    		stage.showAndWait();
+	    		
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		
             
-        } catch (Exception e) {
-        	mensajeError();
-        }
-
+       
     }
 		
 

@@ -184,7 +184,7 @@
                                  <GridPane.margin>
                                     <Insets right="3.0" />
                                  </GridPane.margin></TextField>
-                              <TextField fx:id="idUsuario" promptText="Id" GridPane.columnIndex="1">
+                              <TextField fx:id="idUsuario" editable="false" promptText="Id" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets left="3.0" />
                                  </GridPane.margin></TextField>
@@ -250,7 +250,7 @@
                                     <Insets left="10.0" />
                                  </GridPane.margin>
                               </Button>
-                              <TextField fx:id="idCajero">
+                              <TextField fx:id="idCajero" editable="false">
                                  <GridPane.margin>
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
@@ -290,7 +290,7 @@
                               <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <TextField fx:id="nit" prefHeight="13.0" prefWidth="178.0" promptText="Nit" />
+                              <TextField fx:id="nit" editable="false" prefHeight="13.0" prefWidth="178.0" promptText="Nit" />
                               <TextField fx:id="nombreAlmacen" promptText="Nombre" GridPane.rowIndex="1" />
                               <TextField fx:id="sucursal" promptText="Sucursal" GridPane.rowIndex="2" />
                               <TextField fx:id="direccionAlmacen" promptText="Dirección" GridPane.rowIndex="3" />
@@ -322,7 +322,7 @@
                            </rowConstraints>
                            <children>
                               <TextField fx:id="tipoPago" promptText="Tipo Pago" GridPane.rowIndex="1" />
-                              <TextField fx:id="idPago" prefHeight="27.0" prefWidth="192.0" promptText="Id Pago" />
+                              <TextField fx:id="idPago" editable="false" prefHeight="27.0" prefWidth="192.0" promptText="Id Pago" />
                            </children>
                         </GridPane>
                         <TableView fx:id="tablaPago" layoutX="210.0" layoutY="328.0" onMouseClicked="#getSelected4" prefHeight="160.0" prefWidth="285.0">
@@ -356,7 +356,7 @@
                            </rowConstraints>
                            <children>
                               <TextField fx:id="tipoProducto" prefHeight="25.0" prefWidth="145.0" promptText="Tipo" />
-                              <TextField fx:id="codigo" promptText="Código" GridPane.rowIndex="1" />
+                              <TextField fx:id="codigo" editable="false" promptText="Código" GridPane.rowIndex="1" />
                               <TextField fx:id="nombreProducto" promptText="Nombre" GridPane.rowIndex="2" />
                               <TextField fx:id="precio" prefWidth="192.0" promptText="Precio" GridPane.rowIndex="3" />
                            </children>

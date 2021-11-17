@@ -110,7 +110,7 @@ public class Conexion {
 		return list;
 	}
 	
-	public static ObservableList<Cajero> getDataCajero() {
+	public static ObservableList<Cajero> getDataCajero	() {
 		Connection conn = ConnectarDb();
 		ObservableList<Cajero> list = FXCollections.observableArrayList();
 		try {
