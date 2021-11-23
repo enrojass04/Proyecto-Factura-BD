@@ -10,13 +10,37 @@ public class Producto {
 	private String nombreProducto;
 
 	private double precio;
+	
+	private int cantidad;
 
 	
+	public int getCantidad() {
+		return cantidad;
+	}
+
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+
 	public Producto(String tipoProducto, String codigo, String nombreProducto, double precio) {
 		this.tipoProducto = tipoProducto;
 		this.codigo = codigo;
 		this.nombreProducto = nombreProducto;
 		this.precio = precio;
+	}
+	
+	public Producto(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public Producto(String tipoProducto, String codigo, String nombreProducto, double precio, int cantidad) {
+		this.tipoProducto = tipoProducto;
+		this.codigo = codigo;
+		this.nombreProducto = nombreProducto;
+		this.precio = precio;
+		this.cantidad = cantidad;
 	}
 
 
@@ -67,7 +91,7 @@ public class Producto {
 
 	@Override
 	public String toString() {
-		return nombreProducto +" " + precio ;
+		return nombreProducto;
 	}
 
 

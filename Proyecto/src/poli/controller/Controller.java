@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +44,7 @@ import poli.model.Almacen;
 import poli.model.Cajero;
 import poli.model.Conexion;
 import poli.model.Consumidor;
+import poli.model.Factura;
 import poli.model.Pago;
 import poli.model.Producto;
 import poli.tablas.Registros;
@@ -53,7 +55,7 @@ public class Controller implements Initializable{
 	Connection conn = null;
 	ResultSet rs = null;
 	PreparedStatement pst = null;
-	int index = -1;
+	
 	
 	@FXML
     private Tab usuario;
@@ -184,9 +186,21 @@ public class Controller implements Initializable{
     @FXML
     private TableColumn<Registros, String> colregistros3;
     
-    //FACTURA  
+    //FACTURA
+    @FXML
+    private TextField tfBuscar;
+    @FXML
+    private TextField tfCantidad;
+    @FXML
+    private DatePicker fecha;
+    @FXML
+    private TextField numero;
+    
     @FXML
     private TableView<Producto> TablaPF;
+    @FXML
+    private TableView<Producto> tablaCantidad;
+    
     @FXML
     private ComboBox<Consumidor> cmbConsumidores;
     @FXML
@@ -205,6 +219,8 @@ public class Controller implements Initializable{
     private TableColumn<Producto, String> colC3;
     @FXML
     private TableColumn<Producto, Double> colC4;
+    @FXML
+    private TableColumn<Producto, Integer> colC5;
     
     // Coleccion
  	private ObservableList<Consumidor> listaConsumidor;
@@ -213,7 +229,8 @@ public class Controller implements Initializable{
  	private ObservableList<Pago> listaPago;
  	private ObservableList<Producto> listaProducto;
  	private ObservableList<Registros> listaRegistros;
- 	
+ 	ObservableList<Producto> listaPF = FXCollections.observableArrayList();
+ 	ObservableList<Producto> listaPFcantidad = FXCollections.observableArrayList();
 	//////// Selecccion de datos Consumidor ///////
 	@FXML
 	void getSelected1(MouseEvent event) {
@@ -352,15 +369,23 @@ public class Controller implements Initializable{
 	}
 	
 	////////Actualizar de datos Tabla Productos en Factura /////// 	
-	public void actualizarTablaPF() {
 
-	}
+	
+	public void actualizarTablaPFac(){
+		colC1.setCellValueFactory(new PropertyValueFactory<Producto,String>("tipoProducto"));
+		colC2.setCellValueFactory(new PropertyValueFactory<Producto,String>("codigo"));
+		colC3.setCellValueFactory(new PropertyValueFactory<Producto,String>("nombreProducto"));
+		colC4.setCellValueFactory(new PropertyValueFactory<Producto,Double>("precio"));
+        colC5.setCellValueFactory(new PropertyValueFactory<Producto, Integer>("Cantidad"));
+        //listaProducto = Conexion.getDataProducto();
+		TablaPF.setItems(listaPF);
+    }
 		
 		/**   QUERYS SQL   */
  	
  	
  	//Insertar
- 	public void guardarRegistroConsumidor (){    
+ 	public void agregarConsumidor (){    
  		conn = Conexion.ConnectarDb();
         String sql = "INSERT INTO vistaconsumidor ("
 				+ "nombreUsuario, numeroTarjetaUsuario, puntosUsuario, idUsuario, direccionUsuario, numeroUsuario) VALUES"
@@ -382,11 +407,29 @@ public class Controller implements Initializable{
         } catch (Exception e) {
         	mensajeError();
         }
-        
+        limpiar();
  	}
  	
- 	public void guardarRegistroCajero (){ 
+ 	public void guardarRegistroCajero (){
  		
+ 		conn = Conexion.ConnectarDb();
+        String sql = "INSERT INTO cajero ("
+				+ "codigoCajero, nombreCajero) VALUES"
+				+ " (?, ?)";
+        try {
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, idCajero.getText());
+            pst.setString(2, nombreCajero.getText());
+            
+            pst.execute();
+            
+            mensajeAdd();		
+			actualizarTablaCajero();
+            
+        } catch (Exception e) {
+        	mensajeError();
+        }
+        limpiar();
  	}
  	
  	public void guardarRegistroAlmacen (){    
@@ -410,7 +453,7 @@ public class Controller implements Initializable{
         } catch (Exception e) {
         	mensajeError();
         }
-        
+        limpiar();
  	}
  	//>>>>>>>>>>>>>>>>>>>>
  	public void guardarRegistroPago (){ 
@@ -430,6 +473,7 @@ public class Controller implements Initializable{
          } catch (Exception e) {
          	mensajeError();
          }
+         limpiar();
  	}
  	
  	public void guardarRegistroProducto (){ 
@@ -437,6 +481,7 @@ public class Controller implements Initializable{
          String sql = "INSERT INTO vistaproducto ("
  				+ "tipoProducto, codigo, nombreProducto, precio) VALUES"
  				+ " (?, ?, ?, ?)";
+        
          try {
              pst = conn.prepareStatement(sql);
              pst.setString(1, tipoProducto.getText());
@@ -451,9 +496,50 @@ public class Controller implements Initializable{
          } catch (Exception e) {
          	mensajeError();
          }
+         limpiar();
  	}
+ 	
+ 	public Factura f;
+ 	
+ 	public void generarFactura (){ 
+ 		f = new Factura(Integer.parseInt(numero.getText()), fecha.getValue().toString(),
+ 				cmbConsumidores.getValue(), cmbCajero.getValue(), cmbAlmacenes.getValue(),
+ 				cmbPagos.getValue(), listaPF);
+		conn = Conexion.ConnectarDb();
+        String sql = "INSERT INTO vistafactura ("
+				+ "fecha, numero, consumidor, almacen, cajero, tipopago, producto ) VALUES"
+				+ " (?, ?, ?, ?, ?, ?, ?)";
+        //System.err.println(sql);  
+        
+        try {
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, fecha.getValue().toString());
+            pst.setString(2, numero.getText());
+            pst.setString(3, cmbConsumidores.getValue().toString());
+            pst.setString(4, cmbAlmacenes.getValue().toString());
+            pst.setString(5, cmbCajero.getValue().toString());
+            pst.setString(6, cmbPagos.getValue().toString());
+            //pst.setString(7, listaPF.get(0).toString());
+            pst.setString(7, TablaPF.getItems().toString());
+         
+            System.out.println(TablaPF.getItems().toString());
+            mensajeAdd();		
+			System.err.println(f);
+            
+        } catch (Exception e) {
+        	mensajeError();
+        }
+        limpiar();
+	}
+ 	
+ 	
+ 	/**        Factura           */
+ 	
+ 	
+ 	
  	//Update
  	public void actualizarRegistroConsumidor() {
+ 		
 		try {
             conn = Conexion.ConnectarDb();
             		String value1 = nombreUsuario.getText();
@@ -473,6 +559,7 @@ public class Controller implements Initializable{
         } catch (Exception e) {
         	mensajeError(); 
         }
+		limpiar();
     }
  	
  	public void actualizarRegistroCajero() {
@@ -499,8 +586,7 @@ public class Controller implements Initializable{
         } catch (Exception e) {
         	mensajeError();
         }
-    
-
+		limpiar();
 	}
  	//>>>>>>>>>>>>>>>>>>>>
  	public void actualizarRegistroPago() {
@@ -516,7 +602,8 @@ public class Controller implements Initializable{
             
         } catch (Exception e) {
         	mensajeError();
-        } 		
+        }
+ 		limpiar();
  	}
  	
  	public void actualizarRegistroProducto (){ 
@@ -537,6 +624,7 @@ public class Controller implements Initializable{
         } catch (Exception e) {
         	mensajeError();
         }
+ 		limpiar();
  	}
  	
  
@@ -579,6 +667,9 @@ public class Controller implements Initializable{
     	codigo.setText(null);
     	nombreProducto.setText(null);
     	precio.setText(null);
+    	//Factura
+    	fecha.setValue(null);
+    	numero.setText(null);
 	}
 	
 	@FXML
@@ -586,32 +677,38 @@ public class Controller implements Initializable{
 		
 		}
 	
-    @FXML
-    void agregarProductoEnFactura(ActionEvent event) {    
-    		
-			try {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/poli/view/ProductosEnFactura.fxml"));
-	    		
-	    		Parent root = loader.load();
-	    		
-	    		AgregarPFController controlador = loader.getController();
-	    		controlador.atributos(listaProducto);
-	    		
-	    		Scene scene = new Scene(root);
-	    		Stage stage = new Stage();
-	    		stage.initModality(Modality.APPLICATION_MODAL);
-	    		stage.setScene(scene);
-	    		stage.showAndWait();
-	    		
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		@FXML
+		void buscar(ActionEvent event) {
+
+			String nombreProducto = tfBuscar.getText();
+			int cantidad = Integer.parseInt(tfCantidad.getText());
+			Producto pro = Conexion.buscar_reg(nombreProducto);
+			if (pro == null) {
+
+			} else {
+				// ObservableList<Producto> listaPF = FXCollections.observableArrayList();
+				listaPF.add(pro);
+				/**mostrar(pro);
+				for (Iterator iterator = listaPF.iterator(); iterator.hasNext();) {
+					Producto producto = (Producto) iterator.next();
+					System.err.println(producto);
+				} */
+
 			}
-    		
-    		
-            
-       
-    }
+			Producto proc = new Producto(cantidad);
+			if (proc == null) {
+
+			} else {
+				// ObservableList<Producto> listaPF = FXCollections.observableArrayList();
+				listaPFcantidad.add(proc);
+				tablaCantidad.setItems(listaPFcantidad);
+				
+			}
+			
+			tfBuscar.setText(null);
+			tfCantidad.setText(null);
+
+		}
 		
 
 
@@ -622,7 +719,7 @@ public class Controller implements Initializable{
 		actualizarTablaPago();
 		actualizarTablaProducto();
 		actualizarTablaCajero();
-		actualizarTablaPF();
+		actualizarTablaPFac();
 		actualizarTablaRegistros();
 		
 		
@@ -630,7 +727,7 @@ public class Controller implements Initializable{
 		cmbAlmacenes.setItems(listaAlmacen);
 		cmbPagos.setItems(listaPago);
 		cmbCajero.setItems(listaCajero);
-		cmbProductos.setItems(listaProducto);
+		
 	}
 	
 	public void mensajeAdd(){
@@ -662,4 +759,3 @@ public class Controller implements Initializable{
 	}
 	
 }
-    

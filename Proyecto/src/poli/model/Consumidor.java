@@ -76,7 +76,7 @@ public class Consumidor {
 
 	@Override
 	public String toString() {
-		return nombreUsuario + "-" + idUsuario;
+		return nombreUsuario;
 	}
 
 	

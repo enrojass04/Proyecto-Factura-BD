@@ -19,6 +19,7 @@ import poli.tablas.Registros;
 public class Conexion {
 
 	Connection conn = null;
+	static ResultSet resultado;
 
 	public static Connection ConnectarDb() {
 		try {
@@ -145,5 +146,51 @@ public class Conexion {
 		}
 		return list;
 	}
+	
+	public static Producto buscar_reg(String nombreProducto) {
+		Producto pro = null;
+		Connection conn = ConnectarDb();
+		String sql = "select * from vistaProducto " + "where nombreProducto = '" + nombreProducto + "'";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			resultado = ps.executeQuery();
 
+			pro = asignar();
+
+			System.out.println("Correcto");
+		} catch (Exception e) {
+			System.out.println(" No Correcto");
+		}
+		return pro;
+	}
+
+	public static Producto asignar() {
+		Producto pro = null;
+		try {
+			if (resultado.next()) {
+				pro = new Producto(resultado.getString("tipoProducto"), resultado.getString("codigo"),
+						resultado.getString("nombreProducto"), resultado.getDouble("precio"));
+			}
+		} catch (Exception e) {
+		}
+		return pro;
+	}
+	
+	///////////////////FACTURA
+	/**public static ObservableList<Factura> getDataFactura	() {
+		Connection conn = ConnectarDb();
+		ObservableList<Factura> list = FXCollections.observableArrayList();
+		try {
+			PreparedStatement ps = conn.prepareStatement("select * from vistafactura");
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				list.add(new Factura(rs.getInt("numero"), rs.getString("fecha")));
+			}
+		} catch (Exception e) {
+			
+		}
+		return list;
+	}
+	*/
 }
